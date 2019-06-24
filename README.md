@@ -146,4 +146,4 @@ QoS file names detected are:
 ```
 
 ## QoS Profile Inheritance and Composition Guidance
-QoS Profile Inheritance and Composition Guidance is a best practice we recommend when organizing your XML QoS Profiles using the mechanisms of single and multiple inheritance. For more information about this please refer to this [knowledge base article.](https://community.rti.com/best-practices/qos-profile-inheritance-and-composition-guidance "QoS Profile Inheritance and Composition Guidance")
+QoS Profile Inheritance and Composition Guidance is a best practice we recommend when organizing your XML QoS Profiles using the mechanisms of single and multiple inheritance. For more information please refer to this [knowledge base article.](https://community.rti.com/best-practices/qos-profile-inheritance-and-composition-guidance "QoS Profile Inheritance and Composition Guidance")
