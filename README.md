@@ -1,4 +1,4 @@
-# RTIXMLOutputUtility
+# RTI Connext DDS XML Output Utility
 A command line utility to output final XML values provided by a QoS Profile for RTI Connext DDS Professional.
 
 ## Purpose
