@@ -67,7 +67,7 @@ $ ./RTIXMLOutputUtility
 Here is the sample output for this command
 ```
 The parsed arguments are: 
--qosFile 	 '/home/pralhad/Documents/Tests/CORE-9446/USER_QOS_PROFILES.xml;/home/pralhad/Documents/Tests/CORE-1375/USER_QOS_PROFILES.xml' 
+-qosFile 	 '/home/xxx/Documents/Tests/CORE-9446/USER_QOS_PROFILES.xml;/home/xxx/Documents/Tests/CORE-1375/USER_QOS_PROFILES.xml' 
 -outputFile 	 '' 
 -profilePath 	 'Data_Library'::'Data_Profile' 
 -qosTag 	 'participant_qos'/'property' 
