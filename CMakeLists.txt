@@ -11,7 +11,7 @@
 
 
 cmake_minimum_required(VERSION 3.5)
-project("RTIXMLOutputUtility")
+project("rtixmloutpututility")
 
 if(NOT CONNEXTDDS_DIR)
     set(msg "Please provide the top level folder location for your Connext DDS installation. "
@@ -63,17 +63,17 @@ find_library(rtixml2_library
     PATHS "${CONNEXTDDS_DIR}/lib/${CONNEXTDDS_ARCH}/"
 )
 
-# Create the executable for RTIXMLOutputUtility
-add_executable(RTIXMLOutputUtility
+# Create the executable for rtixmloutpututility
+add_executable(rtixmloutpututility
     ${RTIXMLOUTPUTUTILITY_C_SOURCES}
 )
 
-target_link_libraries(RTIXMLOutputUtility
+target_link_libraries(rtixmloutpututility
     RTIConnextDDS::c_api
     ${rtixml2_library}
     ${CONNEXTDDS_EXTERNAL_LIBS}
 )
 
-target_include_directories(RTIXMLOutputUtility
+target_include_directories(rtixmloutpututility
     PUBLIC
         "${CMAKE_CURRENT_SOURCE_DIR}/src")

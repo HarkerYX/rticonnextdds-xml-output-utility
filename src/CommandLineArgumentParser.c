@@ -17,7 +17,7 @@
 
 const char *RTI_CMD_ARG_HELP[RTI_CMD_ARG_INFO_ARRAY_SIZE] = {
         "-help", 
-        "\t Displays all the options of the RTIXMLOutputUtility", 
+        "\t Displays all the options of the rtixmloutpututility", 
         ""};
 const char *RTI_CMD_ARG_QOS_FILE[RTI_CMD_ARG_INFO_ARRAY_SIZE] = {
         "-qosFile", 
@@ -54,10 +54,10 @@ const char *RTI_CMD_ARG_TOPIC_NAME[RTI_CMD_ARG_INFO_ARRAY_SIZE] = {
 
 void RTI_CommandLineArgumentParser_print_help() 
 {
-    printf("RTIXMLOutputUtility - A tool to visualize the final XML values provided by a Qos Profile \n" 
+    printf("rtixmloutpututility - A tool to visualize the final XML values provided by a QoS Profile \n" 
             "(c) 2019 Copyright, Real-Time Innovations, Inc \n\n");
     printf("Usage: %s [-OPTION] [VALUE] \n\n", 
-            "[./]RTIXMLOutputUtility[.exe]");
+            "[./]rtixmloutpututility[.exe]");
     printf("Options: \n");
     printf("%s \t %s \n \t\t %s \n\n", RTI_CMD_ARG_QOS_FILE[0], RTI_CMD_ARG_QOS_FILE[1], RTI_CMD_ARG_QOS_FILE[2]);
     printf("%s \t %s \n \t\t %s \n\n", RTI_CMD_ARG_OUTPUT_FILE[0], RTI_CMD_ARG_OUTPUT_FILE[1], RTI_CMD_ARG_OUTPUT_FILE[2]);
@@ -304,7 +304,7 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_arguments(
                 goto done;
             }
         } else {
-            printf("Unknown option '%s'. Please run RTIXMLOutputUtility with the %s option "
+            printf("Unknown option '%s'. Please run rtixmloutpututility with the %s option "
                     "to see the valid list of options. \n\n", 
                     argv[i], 
                     RTI_CMD_ARG_HELP[0]);
