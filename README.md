@@ -31,6 +31,9 @@ cmake --build .
 ```
 NOTE: It is not possible to compile this tool against a Windows installation of RTI Connext DDS Professional 6.0.0 due to absence of ``` rtixml2 ``` in the shipped directory. This has been logged internally as an issue and would be fixed in the next major release of the product. For Linux and Mac OS this tool compiles and executes properly.
 
+## Executables
+To ensure easy usage of the utility we have made available prepackaged binaries for Windows, Mac OS and Linux. You can find them under the releases section. These binaries have no external dependencies and can be directly used.
+
 ## Usage
 Here are the various options for this utility
 
