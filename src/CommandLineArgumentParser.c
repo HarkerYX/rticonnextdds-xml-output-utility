@@ -21,7 +21,7 @@ const char *RTI_CMD_ARG_HELP[RTI_CMD_ARG_INFO_ARRAY_SIZE] = {
         ""};
 const char *RTI_CMD_ARG_QOS_FILE[RTI_CMD_ARG_INFO_ARRAY_SIZE] = {
         "-qosFile", 
-        "Absolute path of the QoS XML configuration files you want to analyze "
+        "Absolute or relative path of the QoS XML configuration files you want to analyze "
         "\n\t\t You can also specify multiple files by separating them with a semicolon ';' "
         "\n\t\t and surrounding them with single quotes 'file_path_1;file_path_2;file_path_3'", 
         "OPTIONAL: The standard QoS XML files as defined in the User's manual will still be loaded"};
