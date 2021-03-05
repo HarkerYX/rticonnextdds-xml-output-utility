@@ -2,37 +2,45 @@
 A command line utility to output final XML values provided by a QoS Profile for RTI Connext DDS Professional.
 
 ## Purpose
-In RTI Connext DDS Professional, an application can be configured using an XML QoS (Quality of Service) configuration file. In 6.0.0, XML multiple inheritance (also known as QoS Profile Composition) allows an XML configuration to be composed from multiple QoS Profiles. This enhancement allows greater reusability and flexibility, but you might want to see what your final values are after the composition occurs. This tool helps with that.
+In RTI Connext DDS Professional, an application can be configured using an XML QoS (Quality of Service) configuration file. Since v6.0.0, XML multiple inheritance (also known as QoS Profile Composition) allows an XML configuration to be composed from multiple QoS Profiles. This enhancement allows greater reusability and flexibility, but you might want to see what your final values are after the composition occurs. This tool helps with that.
 
 This tool allows you to see what the final values (after resolution of inheritance) for XML QoS will be when an entity is created, by pointing at a ``` <qos_profile> ```. The utility also allows you to see the value of a subtag within one of the standard ``` <xxx_qos> ``` tags by using the '/' separator.
 
 ## Compiling
 The tool has the following dependencies
-1. RTI Connext DDS Pro v6.0.0 or higher (could work with older versions as well)
-2. CMake v3.5 or higher
+1. RTI Connext DDS Pro v6.1.0 or higher
+2. CMake v3.7.2 or higher
 
 Here is how you would compile this utility after cloning it:
 
-Create a build subdirectory and cd into it
+Create a build subdirectory and cd into it:
 ```
 mkdir build
 cd build
 ```
-Create the toolchain file to compile for your platform
+Create the toolchain file to compile for your platform:
 ```
 cmake .. 
     -DCONNEXTDDS_DIR=<RTI Connext DDS installation folder> 
-    -DCONNEXTDDS_ARCH=<RTI Connext DDS target architecture installed>
-    -DCMAKE_BUILD_TYPE=Release
+    -DCONNEXTDDS_ARCH=<RTI Connext DDS target architecture installed> (optional)
+    -DCMAKE_BUILD_TYPE=Release|Debug
 ```
-Compile
+Compile:
 ```
 cmake --build .
 ```
-NOTE: It is not possible to compile this tool against a Windows installation of RTI Connext DDS Professional 6.0.0 due to absence of ``` rtixml2 ``` in the shipped directory. This has been logged internally as an issue and would be fixed in the next major release of the product. For Linux and Mac OS this tool compiles and executes properly.
+**Note:** If you are using a multi-configuration generator, such as Visual Studio
+Solutions, you can specify the configuration mode to build as follows:
+
+```
+cmake --build . --config Release|Debug
+```
+
+Here is more information about generating
+[Visual Studio Solutions for Windows using CMake](https://cmake.org/cmake/help/v3.16/generator/Visual%20Studio%2016%202019.html#platform-selection).
 
 ## Executables
-To ensure easy usage of the utility we have made available prepackaged binaries for Windows, Mac OS and Linux. You can find them under the releases section. These binaries have no external dependencies and can be directly used.
+To ensure easy usage of the utility we have made available prepackaged binaries for Windows, macOS and Linux. You can find them under the releases section. These binaries have no external dependencies and can be directly used.
 
 ## Usage
 Here are the various options for this utility
@@ -41,8 +49,8 @@ Here are the various options for this utility
 |--------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|
 | qosFile | Absolute or relative path of the QoS XML configuration file you want to analyze. You can also specify multiple files by separating them with a semicolon ';' and surrounding them with single quotes. For example: ``` 'file_path_1;file_path_2;file_path_3' ``` | OPTIONAL: The standard QoS XML files as defined in the User's manual will still be loaded |
 | outputFile | Filename where the utility will output the QoS XML values | OPTIONAL: If not specified the output will be to the console |
-| profilePath | Fully qualified path of a QoS Profile. For example: QoSLibraryName::QoSProfileName | OPTIONAL: The ``` <qos_profile>``` with ``` is_default_qos="true" ``` will be selected OR the default values will be returned for the -qosTag |
-| qosTag | XML tag name who QoS values you want to be fetched. You can also select a subtag by separating it with a '/'. For example: ``` datawriter_qos/history ``` or ``` participant_qos/property ``` | REQUIRED: Allowed values = {datawriter_qos, datareader_qos, topic_qos, participant_qos, publisher_qos, subscriber_qos} |
+| qosProfile | Fully qualified path of a QoS Profile. For example: QoSLibraryName::QoSProfileName | OPTIONAL: The ``` <qos_profile>``` with ``` is_default_qos="true" ``` will be selected OR the default values will be returned for the -qosTag |
+| qosTag | XML tag name who QoS values you want to be fetched. You can also select a subtag by separating it with a '/'. For example: ``` datawriter_qos/history ``` or ``` domain_participant_qos/property ``` | REQUIRED: Allowed values = {datawriter_qos, datareader_qos, topic_qos, domain_participant_qos (participant_qos is being deprecated), publisher_qos, subscriber_qos} |
 | topicName | Can be used with -qosTag = {datawriter_qos, datareader_qos, topic_qos} | OPTIONAL: The default value used with these types will be NULL |
 | help | Displays all the options of the rtixmloutpututility | OPTIONAL |
 
@@ -52,7 +60,7 @@ You should also add the the location of the ``` lib ``` folder to your PATH (Win
 Linux
 export LD_LIBRARY_PATH=<RTI Connext DDS installation folder>/lib/<architecture>:$LD_LIBRARY_PATH
 
-Mac OS
+macOS
 export DYLD_LIBRARY_PATH=<RTI Connext DDS installation folder>/lib/<architecture>:$DYLD_LIBRARY_PATH
 
 Windows
@@ -64,7 +72,7 @@ Here is a sample usage of the utility on a Linux machine
 ```
 $ ./rtixmloutpututility 
     -qosFile '/home/xxx/Documents/Tests/CORE-9446/USER_QOS_PROFILES.xml;/home/xxx/Documents/Tests/CORE-1375/USER_QOS_PROFILES.xml'
-    -profilePath Data_Library::Data_Profile 
+    -qosProfile Data_Library::Data_Profile 
     -qosTag participant_qos/property
 ```
 Here is the sample output for this command
@@ -72,7 +80,7 @@ Here is the sample output for this command
 The parsed arguments are: 
 -qosFile 	 '/home/xxx/Documents/Tests/CORE-9446/USER_QOS_PROFILES.xml;/home/xxx/Documents/Tests/CORE-1375/USER_QOS_PROFILES.xml' 
 -outputFile 	 '' 
--profilePath 	 'Data_Library'::'Data_Profile' 
+-qosProfile 	 'Data_Library'::'Data_Profile' 
 -qosTag 	 'participant_qos'/'property' 
 -topicName 	 '' 
 QoS file names detected are: 

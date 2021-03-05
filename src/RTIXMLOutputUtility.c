@@ -32,7 +32,7 @@ DDS_Boolean RTI_XMLOutputUtility_process_arguments(
                 xml_save_context)) {
             goto done;
         }
-    } else if(strcmp("datawriter_qos", cmd_args->qos_type) == 0) {
+    } else if (strcmp("datawriter_qos", cmd_args->qos_type) == 0) {
         if (!RTI_XMLHelper_dump_datawriter_qos(
                 factory, 
                 cmd_args->qos_library, 
@@ -50,7 +50,7 @@ DDS_Boolean RTI_XMLOutputUtility_process_arguments(
                 xml_save_context)) {
             goto done;
         }
-    } else if(strcmp("publisher_qos", cmd_args->qos_type) == 0) {
+    } else if (strcmp("publisher_qos", cmd_args->qos_type) == 0) {
         if (!RTI_XMLHelper_dump_publisher_qos(
                 factory, 
                 cmd_args->qos_library, 
@@ -58,7 +58,7 @@ DDS_Boolean RTI_XMLOutputUtility_process_arguments(
                 xml_save_context)) {
             goto done;
         }
-    } else if(strcmp("subscriber_qos", cmd_args->qos_type) == 0) {
+    } else if (strcmp("subscriber_qos", cmd_args->qos_type) == 0) {
         if (!RTI_XMLHelper_dump_subscriber_qos(
                 factory, 
                 cmd_args->qos_library, 
@@ -66,7 +66,14 @@ DDS_Boolean RTI_XMLOutputUtility_process_arguments(
                 xml_save_context)) {
             goto done;
         }
-    } else if(strcmp("participant_qos", cmd_args->qos_type) == 0) {
+    } else if (strcmp("participant_qos", cmd_args->qos_type) == 0
+            || strcmp("domain_participant_qos", cmd_args->qos_type) == 0) {
+        if (strcmp("participant_qos", cmd_args->qos_type) == 0) {
+            printf("[WARN] <participant_qos> tag is deprecated from v6.1.0 "
+                    "of RTI Connext DDS. Please use the standard "
+                    "<domain_participant_qos> tag name instead! \n");
+        }
+
         if (!RTI_XMLHelper_dump_participant_qos(
                 factory, 
                 cmd_args->qos_library, 
@@ -110,7 +117,7 @@ int main(int argc, char *argv[])
 
     if (DDS_DomainParticipantFactory_load_profiles(factory) 
             != DDS_RETCODE_OK) {
-        printf("Failed to load the XML configuration files \n");
+        printf("[ERROR] Failed to load the XML configuration files \n");
         goto done;
     }
 
@@ -128,16 +135,16 @@ int main(int argc, char *argv[])
                 cmd_args.qos_profile = 
                         DDS_String_dup(
                                 DDS_XMLObject_get_name(default_profile));
-                printf("The default <qos_profile> detected was '%s::%s'! \n", 
+                printf("[WARN] The default <qos_profile> detected was '%s::%s'! \n", 
                         cmd_args.qos_library, 
                         cmd_args.qos_profile);
             } else {
-                printf("There is no <qos_profile> marked with is_default_qos=\"true\", "
+                printf("[WARN] There is no <qos_profile> marked with is_default_qos=\"true\", "
                         "getting the default QoS values for <%s> now! \n", 
                         cmd_args.qos_type);
             }
         } else {
-            printf("No QoS Profiles found! \n");
+            printf("[ERROR] No QoS Profiles found! \n");
             goto done;
         }
     }
@@ -147,13 +154,13 @@ int main(int argc, char *argv[])
     if (!RTI_XMLOutputUtility_process_arguments(
             &cmd_args, 
             &xml_save_context)) {
-        printf("The processing of arguments failed! \n");
+        printf("[ERROR] The processing of arguments failed! \n");
         goto done;
     }
 
     xml_save_context.sout = DDS_String_alloc(xml_save_context.outputStringLength);
     if (xml_save_context.sout == NULL) {
-        printf("Buffer allocation for XML output failed! \n");
+        printf("[ERROR] Buffer allocation for XML output failed! \n");
         goto done;
     }
     xml_save_context.ssize = xml_save_context.outputStringLength;
@@ -163,14 +170,14 @@ int main(int argc, char *argv[])
     if (!RTI_XMLOutputUtility_process_arguments(
             &cmd_args, 
             &xml_save_context)) {
-        printf("The processing of arguments failed! \n");
+        printf("[ERROR] The processing of arguments failed! \n");
         goto done;
     }
 
     if (cmd_args.output_file != NULL) {
         xml_save_context.fout = fopen(cmd_args.output_file, "w");
         if (xml_save_context.fout == NULL) {
-            printf("Failed to open file %s for writing! \n", cmd_args.output_file);
+            printf("[ERROR] Failed to open file %s for writing! \n", cmd_args.output_file);
             goto done;
         }
     } else {
@@ -188,7 +195,7 @@ done:
     DDS_String_free(user_qos_profile_file);
 
     if (cmd_args.output_file != NULL) {
-        printf("File '%s' save successfully! \n", cmd_args.output_file);
+        printf("[INFO] File '%s' save successfully! \n", cmd_args.output_file);
         fclose(xml_save_context.fout);
     }
 

@@ -30,7 +30,7 @@ const char *RTI_CMD_ARG_OUTPUT_FILE[RTI_CMD_ARG_INFO_ARRAY_SIZE] = {
         "Filename where the utility will output the QoS XML values", 
         "OPTIONAL: If not specified the output will be to the console"};
 const char *RTI_CMD_ARG_PROFILE_PATH[RTI_CMD_ARG_INFO_ARRAY_SIZE] = {
-        "-profilePath", 
+        "-qosProfile", 
         "The fully qualified path of a QoS Profile" 
         "\n\t\t e.g. QoSLibraryName::QoSProfileName", 
         "OPTIONAL: The <qos_profile> with is_default_qos=\"true\" will be selected"
@@ -39,12 +39,12 @@ const char *RTI_CMD_ARG_QOS_TAG[RTI_CMD_ARG_INFO_ARRAY_SIZE] = {
         "-qosTag", 
         "The XML tag name whose QoS values you want to be fetched"
         "\n\t\t You can also select a subtag by separating it with a '/'"
-        "\n\t\t e.g. datawriter_qos/history or participant_qos/property", 
+        "\n\t\t e.g. datawriter_qos/history or domain_participant_qos/property", 
         "REQUIRED: Allowed values = " 
         "\n\t\t\t \"datawriter_qos\", " 
         "\n\t\t\t \"datareader_qos\", " 
         "\n\t\t\t \"topic_qos\", " 
-        "\n\t\t\t \"participant_qos\", " 
+        "\n\t\t\t \"domain_participant_qos\", " 
         "\n\t\t\t \"publisher_qos\", " 
         "\n\t\t\t \"subscriber_qos\""};
 const char *RTI_CMD_ARG_TOPIC_NAME[RTI_CMD_ARG_INFO_ARRAY_SIZE] = {
@@ -116,7 +116,7 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_qos_file(
         number_of_files++;
         token += strlen(RTI_SPLIT_STRING_QOS_FILE);
     }
-    printf("QoS file names detected are: \n");
+    printf("[INFO] QoS file names detected are: \n");
 
     DDS_StringSeq_ensure_length(
             url_profile, 
@@ -126,7 +126,7 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_qos_file(
     buffer_base = DDS_String_dup(qos_file);
     buffer = buffer_base;
     if (buffer == NULL) {
-        printf("Buffer allocation failed! \n");
+        printf("[ERROR] Buffer allocation failed! \n");
         goto done;
     }
 
@@ -142,7 +142,7 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_qos_file(
         DDS_String_free(file_name);
         file_name = DDS_String_alloc(string_size + strlen("file://"));
         if (file_name == NULL) {
-            printf("Buffer allocation for '%s' field failed! \n", 
+            printf("[ERROR] Buffer allocation for '%s' field failed! \n", 
                     RTI_CMD_ARG_QOS_FILE[0]);
             goto done;
         }
@@ -164,7 +164,7 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_qos_file(
 done:
 
     if (!result) {
-        printf("Parsing of the option '%s' failed! \n", RTI_CMD_ARG_QOS_FILE[0]);
+        printf("[ERROR] Parsing of the option '%s' failed! \n", RTI_CMD_ARG_QOS_FILE[0]);
     }
     buffer = NULL;
     token = NULL;
@@ -189,7 +189,7 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_arguments(
             if (RTI_CommandLineArgumentParser_has_value(argc, argv, i)) {
                 output_values->qos_file = argv[i + 1];
             } else {
-                printf("No value provided for '%s' option! \n\n", 
+                printf("[WARN] No value provided for '%s' option! \n\n", 
                         RTI_CMD_ARG_QOS_FILE[0]);
                 goto done;
             }
@@ -197,7 +197,7 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_arguments(
             if (RTI_CommandLineArgumentParser_has_value(argc, argv, i)) {
                 output_values->output_file = argv[i + 1];
             } else {
-                printf("No value provided for '%s' option! \n\n", 
+                printf("[WARN] No value provided for '%s' option! \n\n", 
                         RTI_CMD_ARG_OUTPUT_FILE[0]);
                 goto done;
             }
@@ -212,7 +212,7 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_arguments(
 
                     output_values->qos_library = DDS_String_alloc(string_size);
                     if (output_values->qos_library == NULL) {
-                        printf("Buffer allocation for '%s' field failed! \n", 
+                        printf("[ERROR] Buffer allocation for '%s' field failed! \n", 
                                 RTI_CMD_ARG_PROFILE_PATH[0]);
                         goto done;
                     }
@@ -220,7 +220,7 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_arguments(
                             output_values->qos_library, 
                             argv[i + 1], 
                             string_size);
-                    
+
                     string_size = 
                             strlen(argv[i + 1]) 
                             - strlen(output_values->qos_library) 
@@ -228,7 +228,7 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_arguments(
 
                     output_values->qos_profile = DDS_String_alloc(string_size);
                     if (output_values->qos_profile == NULL) {
-                        printf("Buffer allocation for '%s' field failed! \n", 
+                        printf("[ERROR] Buffer allocation for '%s' field failed! \n", 
                                 RTI_CMD_ARG_PROFILE_PATH[0]);
                         goto done;
                     }
@@ -237,12 +237,12 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_arguments(
                             token + strlen(RTI_SPLIT_STRING_PROFILE_PATH), 
                             string_size);
                 } else {
-                    printf("Parsing the value for option '%s' failed! \n", 
+                    printf("[ERROR] Parsing the value for option '%s' failed! \n", 
                             RTI_CMD_ARG_PROFILE_PATH[0]);
                     goto done;
                 }
             } else {
-                printf("No value provided for '%s' option! \n\n", 
+                printf("[WARN] No value provided for '%s' option! \n\n", 
                         RTI_CMD_ARG_PROFILE_PATH[0]);
                 goto done;
             }
@@ -257,7 +257,7 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_arguments(
 
                     output_values->qos_type = DDS_String_alloc(string_size);
                     if (output_values->qos_type == NULL) {
-                        printf("Buffer allocation for '%s' field failed! \n", 
+                        printf("[ERROR] Buffer allocation for '%s' field failed! \n", 
                                 RTI_CMD_ARG_QOS_TAG[0]);
                         goto done;
                     }
@@ -265,7 +265,7 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_arguments(
                             output_values->qos_type, 
                             argv[i + 1], 
                             string_size);
-                    
+
                     string_size = 
                             strlen(argv[i + 1]) 
                             - strlen(output_values->qos_type) 
@@ -273,7 +273,7 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_arguments(
 
                     output_values->query = DDS_String_alloc(string_size);
                     if (output_values->query == NULL) {
-                        printf("Buffer allocation for '%s' field failed! \n", 
+                        printf("[ERROR] Buffer allocation for '%s' field failed! \n", 
                                 RTI_CMD_ARG_QOS_TAG[0]);
                         goto done;
                     }
@@ -284,14 +284,14 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_arguments(
                 } else {
                     output_values->qos_type = DDS_String_alloc(strlen(argv[i + 1]));
                     if (output_values->qos_type == NULL) {
-                        printf("Buffer allocation for '%s' field failed! \n", 
+                        printf("[ERROR] Buffer allocation for '%s' field failed! \n", 
                                 RTI_CMD_ARG_QOS_TAG[0]);
                         goto done;
                     }
                     strcpy(output_values->qos_type, argv[i + 1]);
                 }
             } else {
-                printf("No value provided for '%s' option! \n\n", 
+                printf("[WARN] No value provided for '%s' option! \n\n", 
                         RTI_CMD_ARG_QOS_TAG[0]);
                 goto done;
             }
@@ -299,12 +299,12 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_arguments(
             if (RTI_CommandLineArgumentParser_has_value(argc, argv, i)) {
                 output_values->topic_name = argv[i + 1];
             } else {
-                printf("No value provided for '%s' option! \n\n", 
+                printf("[WARN] No value provided for '%s' option! \n\n", 
                         RTI_CMD_ARG_TOPIC_NAME[0]);
                 goto done;
             }
         } else {
-            printf("Unknown option '%s'. Please run rtixmloutpututility with the %s option "
+            printf("[ERROR] Unknown option '%s'. Please run rtixmloutpututility with the %s option "
                     "to see the valid list of options. \n\n", 
                     argv[i], 
                     RTI_CMD_ARG_HELP[0]);
@@ -314,7 +314,7 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_arguments(
     }
 
     if (output_values->qos_type == NULL) {
-        printf("ERROR: '%s' is a REQUIRED argument for the utility! \n", RTI_CMD_ARG_QOS_TAG[0]);
+        printf("[ERROR] '%s' is a REQUIRED argument for the utility! \n", RTI_CMD_ARG_QOS_TAG[0]);
         printf("Here is the help on that option! \n");
         printf("%s \t %s \n \t\t %s \n\n", RTI_CMD_ARG_QOS_TAG[0], RTI_CMD_ARG_QOS_TAG[1], RTI_CMD_ARG_QOS_TAG[2]);
         goto done;
@@ -325,8 +325,9 @@ DDS_Boolean RTI_CommandLineArgumentParser_parse_arguments(
             || strcmp(output_values->qos_type, "topic_qos") == 0
             || strcmp(output_values->qos_type, "participant_qos") == 0
             || strcmp(output_values->qos_type, "publisher_qos") == 0
-            || strcmp(output_values->qos_type, "subscriber_qos") == 0)) {
-        printf("ERROR: \"%s\" doesn't match one of the expected values for '%s' option! \n", 
+            || strcmp(output_values->qos_type, "subscriber_qos") == 0
+            || strcmp(output_values->qos_type, "domain_participant_qos") == 0)) {
+        printf("[ERROR] \"%s\" doesn't match one of the expected values for '%s' option! \n", 
                 output_values->qos_type, 
                 RTI_CMD_ARG_QOS_TAG[0]);
         printf("Here is the help on that option! \n");

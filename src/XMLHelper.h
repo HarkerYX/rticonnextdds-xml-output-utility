@@ -20,11 +20,6 @@
 DDS_DomainParticipant* RTI_XMLHelper_create_dummy_participant(
         DDS_DomainParticipantFactory *factory);
 
-DDS_Boolean RTI_XMLHelper_insert_enclosing_tag(
-        char *qos_type, 
-        struct RTIXMLSaveContext *context, 
-        int closing);
-
 DDS_Boolean RTI_XMLHelper_dump_datawriter_qos(
         DDS_DomainParticipantFactory *factory, 
         char *library_name, 
