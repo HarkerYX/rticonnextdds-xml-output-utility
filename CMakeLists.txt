@@ -14,19 +14,20 @@ cmake_minimum_required(VERSION 3.7.2)
 project("rtixmloutpututility")
 
 if(NOT CONNEXTDDS_DIR)
-    set(msg "Please provide the top level folder location for your Connext DDS installation. "
+    set(msg "Please provide the top level folder location for your RTI Connext DDS installation. "
             "You need v6.0.0 and above for using this utility. Use the following option "
-            "-DCONNEXTDDS_DIR=<your installation path>.")
+            "-DCONNEXTDDS_DIR=<Your Installation Path>.")
     message(FATAL_ERROR ${msg})
 endif()
 
 # Find RTI Connext dependencies
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CONNEXTDDS_DIR}/resource/cmake")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CONNEXTDDS_DIR}/resource/cmake/")
 find_package(
-    RTIConnextDDS "6.0.0"
+    RTIConnextDDS "6.1.0"
     REQUIRED
     COMPONENTS
         core
+        rtixml2
 )
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux" AND
@@ -40,29 +41,6 @@ set(RTIXMLOUTPUTUTILITY_C_SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/CommandLineArgumentParser.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/XMLHelper.c")
 
-if(BUILD_SHARED_LIBS)
-    set(rtixml2_library_name "rtixml2")
-else()
-    set(rtixml2_library_name "rtixml2z")
-endif()
-
-if(CMAKE_BUILD_TYPE)
-    string(TOUPPER "${CMAKE_BUILD_TYPE}" build_mode)
-else()
-    set(build_mode "DEBUG")
-endif()
-
-if(build_mode STREQUAL "DEBUG")
-    set(rtixml2_library_name "${rtixml2_library_name}d")
-endif()
-
-message("-- rtixml2_library_name: ${rtixml2_library_name}")
-
-find_library(rtixml2_library
-    NAMES ${rtixml2_library_name}
-    PATHS "${CONNEXTDDS_DIR}/lib/${CONNEXTDDS_ARCH}/"
-)
-
 # Create the executable for rtixmloutpututility
 add_executable(rtixmloutpututility
     ${RTIXMLOUTPUTUTILITY_C_SOURCES}
@@ -70,7 +48,7 @@ add_executable(rtixmloutpututility
 
 target_link_libraries(rtixmloutpututility
     RTIConnextDDS::c_api
-    ${rtixml2_library}
+    RTIConnextDDS::rtixml2
     ${CONNEXTDDS_EXTERNAL_LIBS}
 )
 
