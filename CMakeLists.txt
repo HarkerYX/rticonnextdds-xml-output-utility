@@ -27,7 +27,6 @@ find_package(
     REQUIRED
     COMPONENTS
         core
-        rtixml2
 )
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux" AND
